@@ -20,17 +20,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(dtf3bm2=8cl$*gvo71h(t*=(b86&9s&5!m#r&*_6k*rk9s14f'
+SECRET_KEY = '6tkiq8b0=gtq19re0(r!r&7$(4$djc=f)j7^s1x*2mex2(bf6@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'taskmanager',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,6 +67,8 @@ TEMPLATES = [
         },
     },
 ]
+
+LOGIN_REDIRECT_URL = 'home'
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
@@ -105,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class TaskmanagerConfig(AppConfig):
+class TaskappConfig(AppConfig):
     name = 'taskmanager'
