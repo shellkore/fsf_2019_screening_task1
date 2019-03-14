@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Team, Task
+from .models import Team, Task, Comments
 from django.contrib.auth.models import Group, User
 from django.utils.translation import ugettext_lazy as _
 from .choices import *
@@ -35,3 +35,8 @@ class TaskEditForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ('title','description', 'assignee','status')
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ('comment',)
