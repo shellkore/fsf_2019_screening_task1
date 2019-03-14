@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class Team(models.Model):
     class Meta:
         verbose_name = _("Team")
@@ -45,3 +46,15 @@ class Task(models.Model):
         return self.title
     def get_assignee(self):
         return ",".join([str(a) for a in self.assignee.all()])
+
+class Comments(models.Model):
+    class Meta:
+        verbose_name = _("Comment")
+        verbose_name_plural = _("Comments")
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='comment_creator', verbose_name=_('comment_creator'),
+                                   on_delete=models.PROTECT, null=False)
+    comment = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return self.comment
