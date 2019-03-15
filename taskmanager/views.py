@@ -1,7 +1,7 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import SignUpForm, TeamForm, TaskForm, TaskEditForm
+from .forms import SignUpForm, TeamForm, TaskForm, TaskEditForm, CommentForm
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group, User
 import simplejson as json
 from .models import Team, Task, Comments
 from django.contrib.auth.decorators import login_required
-from django import DATE_INPUT_FORMATS = ()
+from django import forms
 from django.utils import timezone
 
 def signup(request):
@@ -337,4 +337,64 @@ def taskdelete(request, string):
     else:
         # sorry no permission
         return HttpResponse("You don't have permission to delete the task")
+
+
+
+"""
+View to Create Comment for a specific task created in a same group
+"""
+@login_required
+def commentreg(request,string):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            task = get_object_or_404(Task, title=string)
+            comment = request.POST.get('comment')
+            created_by = request.user
+            created_at = timezone.now()
+            Comments.objects.create(task=task,author=created_by,comment=comment,created_by=created_by,assignee=assignee,status=state,created_at=created_at,last_modified=last_modified)
+            task = get_object_or_404(Task, title=string)
+            #return taskview(request, string)
+            return redirect('taskview', string=string)
+        else:
+            return HttpResponse('comment invalid')
+    else:
+        form = CommentForm()
+    return taskview(request, string)
+
+
+"""
+View to Edit Comment  ### allows only comment creator to edit ###
+"""
+@login_required
+def commentedit(request, id):
+    comment = get_object_or_404(Comments, id=id)
+    if str(request.user) != str(comment.author):
+        return HttpResponse("You don't have permission to edit")
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            task = get_object_or_404(Task, title=comment.task)
+            new_comment = request.POST.get('comment')
+            comment.comment = new_comment
+            comment.save()
+            return redirect('taskview', string=task.title)
+    else:
+        form = CommentForm(instance=comment)
+    return render(request, 'commentedit.html', {'form': form, 'comment': comment})
+
+"""
+View to Delete Comment ### allows only comment creator to delete ###
+"""
+@login_required
+def commentdel(request, id):
+    comment = get_object_or_404(Comments, id=id)
+    if str(request.user) != str(comment.author):
+        # has no permission
+        return HttpResponse("You don't have permission to delete Comment contact comment creator")
+    else:
+        # has permission to delete
+        task = comment.task
+        comment.delete()
+        return redirect('taskview', string=task.title)
 
