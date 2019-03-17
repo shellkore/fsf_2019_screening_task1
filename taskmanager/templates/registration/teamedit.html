@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Team{% endblock %}
+
+{% block content %}
+<br><br>
+    <div class="container" style="background-color:aliceblue;">
+        <div class="row">
+            <div class = "col-md-12" style=" text-align: left;">
+                <a href="{% url 'home' %}"><h2>🏠Home</h2></a>
+            </div>
+        </div>
+    </div> 
+
+    <div class="container">
+
+      <br><h1>Create Task</h1><br>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+          <div class="form-group">
+            {% if field.name == "title" %}  
+              <label for="id_title">Title :</label>
+              {{field}}
+              <small id="titleHelp" class="form-text text-muted">Please enter the appropriate title for task.</small>
+            {% else %}
+              <label for="id_users">Select Users :</label><br>
+              {{field}}
+              <small id="usersHelp" class="form-text text-muted">Please select the appropriate users for Team. Hold down "Control", or "Command" on a Mac, to select more than one.</small>
+            {% endif %}
+            
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+
+  {% block javascript %}
+      <script type="text/javascript">
+         $( document ).ready(function() {
+          var $id_title = $('#id_title');
+          $id_title.addClass("form-control");
+         });
+         $( document ).ready(function() {
+          var $id_users = $('#id_users');
+          $id_users.addClass("form-control");
+         });
+    </script>
+    {% endblock %}
+
+{% endblock %}

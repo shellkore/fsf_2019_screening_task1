@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+   <title>Create Team</title>
+   <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+   <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css">
+   <link href="/static/admin/css/vendor/select2/select2.css" type="text/css" media="screen" rel="stylesheet">
+   <link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">
+   <script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+   <script type="text/javascript" src="/static/admin/js/vendor/select2/select2.full.js"></script>
+   <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+   <script type="text/javascript" src="/static/admin/js/autocomplete.js"></script>
+   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+   <link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+   <meta name="robots" content="NONE,NOARCHIVE">
+</head>
+<body class=" app-taskapp model-team change-form"
+   data-admin-utc-offset="19800">
+   <!-- Container -->
+   <div id="container">
+      <!-- Content -->
+      <div id="content" class="colM">
+        <h1 style="position:absolute; right:5vw;"><a href="{% url 'home' %}"><b>Home</b></a></h1>
+        <h1>Create Team</h1>
+         <div id="content-main">
+            <form action="" method="post" id="team_form" novalidate>
+               {% csrf_token %}
+               <div>
+                  <fieldset class="module aligned ">
+                     <div class="form-row field-title">
+                        <div>
+                           <label class="required" for="id_title">Title:</label>
+                           <input type="text" name="title" class="vTextField" maxlength="200" required id="id_title">
+                        </div>
+                     </div>
+                     <div class="form-row field-users">
+                        <div>
+                           <label for="id_users">Team_users:</label>
+                           <div class="related-widget-wrapper">
+                              <select name="users" id="id_users" class="admin-autocomplete" data-ajax--cache="true" data-ajax--type="GET" data-ajax--url="/ajax/users/" data-theme="admin-autocomplete" data-allow-clear="true" data-placeholder="" multiple>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+                  </fieldset>
+                  <div class="submit-row">
+                     <input type="submit" value="Save" class="default" name="_save">
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+      <!-- END Content -->
+   </div>
+   <!-- END Container -->
+</body>
+</html>
