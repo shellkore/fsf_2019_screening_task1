@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br><br>
+    <div class="container" style="background-color:aliceblue;">
+        <div class="row">
+            <div class = "col-md-4" style=" text-align: left;">
+                <a href="{% url 'home' %}"><h2>🏠Home</h2></a>
+            </div>
+            <div class = "col-md-4" style=" text-align: center;">
+                <h3>Assigned to : {% for assignee in a %}{{assignee}} {% endfor %}</h3>
+            </div>
+            <div class = "col-md-4" style=" text-align: right;">
+                {% if task.created_by == request.user %}
+                    <h3>Yay ! You are the task creator</h3>
+                {% else %}
+                    <h3>Task Creator : {{ task.created_by }}</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <br>
+
+    <div class="container" style="background-color:aliceblue;">   
+        <div class="row">
+            <div class="col-sm-12" style="text-align: left;">
+                {% if task.created_by == request.user %}
+                    <h3><a href="{% url 'taskedit' string=task.title %}">{{ task.title }}</a></h3>
+                {% else %}
+                    {{task.title}}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4" style="text-align: left;">
+                <h4>Status : {{task.status}}</h4>
+            </div>
+            <div class="col-sm-4" style="text-align: center;">
+                <h4>Created at : {{task.created_at}}</h4>
+            </div>
+            <div class="col-sm-4" style="text-align: right;">
+                <h4>Last Updated at : {{task.last_modified}}</h4>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="container" style="background-color:#b7e0f5;">
+        <h3>Comments : </h3>
+        {% for comment in comments %}
+            <div class="row" style="background-color:#61c5f7;margin: 1%;">
+                <div class="col-sm-12" style="text-align: left;">
+                    <h5>{{comment.author}} commented on {{comment.created_date}}</h5>
+                </div>
+                <div class="col-sm-12" style="text-align: left;">
+                    <h3>{{comment}}</h3>
+                </div>
+                {% if comment.author == request.user %}
+                    <div class="col-sm-12" style="text-align: left;padding-bottom: 5px;">
+                        <a href="{% url 'commentedit' id=comment.id %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Edit?</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <br>
+        <form method="post">
+                <div class="form-group">{% csrf_token %}
+                  <label for="id_comment"></label> 
+                  <textarea class="form-control" name="comment" cols="40" rows="10" required="" id="id_comment" placeholder="Enter your Comment here !"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+        <br>
+    </div>
+      
+{% endblock %}

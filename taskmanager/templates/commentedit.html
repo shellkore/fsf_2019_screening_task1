@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<br><br>
+    <div class="container" style="background-color:aliceblue;">
+        <div class="row">
+            <div class = "col-md-4" style=" text-align: left;">
+                <a href="{% url 'home' %}"><h2>🏠Home</h2></a>
+            </div>
+            <div class = "col-md-8" style=" text-align: right;">
+                <h3>Commented under task "{{comment.task}}" on "{{comment.created_date}}"</h3>
+            </div>
+        </div>
+    </div>
+    
+    <br>
+    <div class="container" style="background-color:#b7e0f5;">
+        <form method="post">
+                {% csrf_token %}
+ 
+                <div class="form-group">
+                        <label for="id_comment">Comment:</label> 
+                        <textarea class="form-control" name="comment" rows="5" maxlength="1000" required="" id="id_comment" aria-describedby="comHelp" placeholder="Enter Comment">{{comment.comment}}</textarea>
+                        <small id="comHelp" class="form-text text-muted">Please enter the comment for task.</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Comment</button>
+                <a href="{% url 'home' %}" class="btn btn-primary" role="button" aria-pressed="true">Cancel</a>
+            {% if comment.author == request.user %}
+                <a href="{% url 'commentdel' id=comment.id %}" class="btn btn-primary" role="button" aria-pressed="true">Delete Comment ?</a>
+            {% endif %}
+        </form>
+        <br><br>
+    </div>
+{% endblock %}

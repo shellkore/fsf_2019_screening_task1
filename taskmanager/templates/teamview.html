@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+   <br><br>
+        <div class="container" style="background-color:aliceblue;">
+                <div class="row">
+                        <div class = "col-md-6" style=" text-align: left;">
+                                <a href="{% url 'home' %}"> <h2>🏠Home</h2></a>
+                        </div>
+                        <div class = "col-md-6" style=" text-align: right;">
+                                {% if see == 0 %}
+                                        <h3>Team Creator : {{ team.created_by }}</h3>
+                                {% else %}
+                                        <h3>Yay ! You are the team creator</h3>
+                                {% endif %}
+                        </div>
+                </div>
+        </div>
+
+        <div class="container">            
+                <div class="row">
+                        <div class="col-sm-12" style="text-align: left;">
+                        {% if see == 1 %}
+                                <h2>Members of <a href="{% url 'teamedit' string=team.title %}">{{ team.title }}</a> :</h2>
+                        {% else %}
+                                <h2>Members of {{ team.title }} :</h2>
+                        {% endif %}
+                        
+                        {% for teammate in teammates %}
+                                <h4>{{ forloop.counter | linebreaksbr}} {{teammate}}</h4>
+                        {% endfor %}
+                        </div>
+                </div>
+                {% if see == 1 %}
+                        <div class="footer">
+                                <h5>Ps: Click on the Team name to edit it</h5>
+                        </div>
+                {% endif %}
+        </div>
+        
+{% endblock %}

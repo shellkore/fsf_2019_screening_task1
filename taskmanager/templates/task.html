@@ -1,0 +1,149 @@
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Create Task</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+      <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+   </head>
+
+
+<body>
+    <br><br>
+    <div class="container" style="background-color:aliceblue;">
+        <div class="row">
+            <div class = "col-md-12" style=" text-align: left;">
+                <h2><a href="{% url 'home' %}">🏠Home</a></h2>
+            </div>
+        </div>
+    </div>    
+  <div class="container">
+
+    <br><h1>Create Task</h1><br>
+
+    <form method="post">
+        {% csrf_token %}
+      <div class="form-group">
+        <label for="id_title">Title :</label>
+        <input type="text" class="form-control" name="title" maxlength="50" required="" id="id_title" aria-describedby="titleHelp" placeholder="Enter Task Title">
+        <small id="titleHelp" class="form-text text-muted">Please enter the appropriate title for task.</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="id_description">Description:</label> 
+        <textarea class="form-control" name="description" rows="5" maxlength="1000" required="" id="id_description" aria-describedby="descHelp" placeholder="Enter Task Description"></textarea>
+        <small id="descHelp" class="form-text text-muted">Please enter the brief description for task.</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="id_team">Team :</label>
+        <select class="form-control" name="team" id="id_team" aria-describedby="teamHelp">
+          <option value="" selected="">---------</option>
+        </select>
+        <small id="teamHelp" class="form-text text-muted">Please select team, if you are not in any team leave it blank.</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="id_status">Status :</label>
+        <select class="form-control" required="" name="status" id="id_status" aria-describedby="statusHelp">
+            <option value="to-do">To Do</option>
+              <option value="planned">Planned</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+              <option value="dismissed">Dismissed</option>
+        </select>
+        <small id="statusHelp" class="form-text text-muted">Please select the present status of Task.</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="id_assignee">Task Assigne :</label>
+        <select class="form-control" name="assignee" id="id_assignee" aria-describedby="assignHelp" multiple>
+          <option value="" selected="">---------</option>
+        </select>
+        <small id="assignHelp" class="form-text text-muted">Please select assignee, if you are not in any team you will be automatically assigned.</small>
+      </div>
+      
+    <button type="submit" class="btn btn-primary">Create</button>
+  </form>
+  </div>
+
+
+      <br><br><br>
+      {% block javascript %}
+      <script type="text/javascript">
+         $( document ).ready(function() {
+         
+           var $id_assignee = $('#id_assignee');
+             $id_assignee.empty();
+             $id_assignee.append('<option value="{{request.user.id}}" selected="">{{request.user.username}}</option>');
+         
+             //console.log( "ready!" );
+             $.ajax({
+               url: "/ajax/teams/",
+               dataType: 'json',
+               success: function(data) {
+                 var t = data[0]
+                 for (var key in t) {
+                   if (t.hasOwnProperty(key)) {
+                     var val = t[key];
+                     console.log(key,val);
+                   }
+                 }
+                 //<option value="1">team</option>
+                 var $id_team = $('#id_team');
+                   $id_team.empty();
+                   $id_team.append('<option value="" selected="">---------</option>');
+                   for (var key in t) {
+                     if (t.hasOwnProperty(key)) {
+                       $id_team.append('<option value=' + key + '>' + t[key] + '</option>');
+                     }
+                   }
+         
+               }});
+         
+           });
+         
+         $(document).ready(function(){
+           $('#id_team').change(function(){
+           var e = document.getElementById("id_team");
+           var team = e.options[e.selectedIndex].value;
+           console.log(team)
+           $.ajax({
+               url: "/ajax/team/users/",
+               data: {
+                 'team': team
+               },
+               dataType: 'json',
+               success: function(data) {
+                 var t = data[0]
+                 
+                 console.log(data[0])
+                 for (var key in t) {
+                   if (t.hasOwnProperty(key)) {
+                     var val = t[key];
+                     console.log(key,val);
+                   }
+                 }
+         
+                 var $id_assignee = $('#id_assignee');
+                   $id_assignee.empty();
+                  //  $id_assignee.append('<option value="" selected="">---------</option>');
+                   for (var key in t) {
+                     if (t.hasOwnProperty(key)) {
+                       $id_assignee.append('<option value=' + key + '>' + t[key] + '</option>');
+                     }
+                   }
+               }});
+         
+           });
+         });
+      </script>
+      {% endblock %}
+   </body>
+</html>
